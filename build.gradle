@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'spring-akka'
+    version =  '0.1.0'
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-release" }
+    maven { url "http://repo.akka.io/snapshots/" }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile('org.apache.kafka:kafka_2.11:0.9.0.0')
+	compile('org.apache.zookeeper:zookeeper:3.4.7')
+    // tag::jetty[]
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    // end::jetty[]
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    // end::actuator[]
+     compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.4-SNAPSHOT'
+     compile group: 'com.typesafe.akka', name: 'akka-remote_2.11', version: '2.4.11'
+    testCompile("junit:junit")
+}
+
+configurations.all {
+   exclude module: 'slf4j-log4j12'
+}
